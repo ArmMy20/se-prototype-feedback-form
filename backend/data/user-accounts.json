@@ -1,17 +1,20 @@
 [
     {
-        "s_id": "MO1",
+        "user_id": "MO100",
+        "role": "Module Organiser",
         "username": "MOtest",
         "password": "mo123"
     },
     {
-        "s_id": "M1",
-        "username": "Mtest",
-        "password": "m123"
+        "user_id": "MK100",
+        "role": "Marker",
+        "username": "MKtest",
+        "password": "mk123"
     },
     {
-        "s_id": "S1",
-        "username": "Stest",
-        "password": "s123"
+        "user_id": "ST100",
+        "role": "Student",
+        "username": "STtest",
+        "password": "st123"
     }
 ]
