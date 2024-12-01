@@ -8,16 +8,16 @@ supported data types:
 - Arrays    [1, 2, 3]    ["apple", "banana", "cherry"]
 - Objects   {"name": "Kyle", "age": 30}    {"age": 30}      (these objects are called key pairs)
 
-to store data in json file, use {} and key pairs, each pair separated by comma, like:
+to store data in json file, use {} and key pairs, where each key pair is separated by a comma, like:
 
 {
     "name": "Kyle",
-    "age": 30
+    "age": 30,
     "isProgrammer": true,
     "hobbies": ["Swimming", "Eating"]
 }
 
-to store array of data, use [] instead, separating each {} with a comma:
+to store an array of data, use [] instead, separating each {} with a comma:
 
 [
     {
