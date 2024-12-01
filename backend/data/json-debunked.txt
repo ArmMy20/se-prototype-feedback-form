@@ -24,11 +24,11 @@ to store an array of data, use [] instead, separating each {} with a comma:
         "name": "John",
         "age": 30
     },
-        {
+    {
         "name": "Kate",
         "age": 19
     },
-        {
+    {
         "name": "William",
         "age": 17
     },
