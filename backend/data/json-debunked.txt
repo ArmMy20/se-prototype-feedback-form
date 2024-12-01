@@ -1,7 +1,7 @@
 json files debunked
 
 supported data types:
-- Strings   "Hello World", "Kyle"
+- Strings   "Hello World"   "Kyle"
 - Numbers   10    1.5    -30    1.2e10
 - Booleans  True  False
 - null      null
