@@ -31,5 +31,5 @@ to store an array of data, use [] instead, separating each {} with a comma:
     {
         "name": "William",
         "age": 17
-    },
+    }
 ]
