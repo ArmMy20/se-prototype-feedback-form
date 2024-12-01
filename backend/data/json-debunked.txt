@@ -17,7 +17,7 @@ to store data in json file, use {} and key pairs, each pair separated by comma, 
     "hobbies": ["Swimming", "Eating"]
 }
 
-to store array of data, use [] instead:
+to store array of data, use [] instead, separating each {} with a comma:
 
 [
     {
