@@ -1,0 +1,128 @@
+[
+    {
+      "assignment-tag": "Assignment 1: Introduction to Programming",
+      "submissions": [
+        {
+          "studentName": "Alice Johnson",
+          "studentId": "S123456",
+          "feedback": [
+            { "criteria": "Code Quality", "comment": "Well-structured and clean code.", "marks": 9 },
+            { "criteria": "Functionality", "comment": "All specified requirements were met.", "marks": 10 },
+            { "criteria": "Error Handling", "comment": "Handled most edge cases effectively.", "marks": 8 },
+            { "criteria": "Submission Format", "comment": "Correct file names and formats used.", "marks": 10 },
+            { "criteria": "Timeliness", "comment": "Submitted on time.", "marks": 10 }
+          ],
+          "overallMarks": 47
+        },
+        {
+          "studentName": "Bob Smith",
+          "studentId": "S123457",
+          "feedback": [
+            { "criteria": "Code Quality", "comment": "Code is functional but lacks readability.", "marks": 7 },
+            { "criteria": "Functionality", "comment": "Missed one requirement.", "marks": 8 },
+            { "criteria": "Error Handling", "comment": "Minimal error handling implemented.", "marks": 6 },
+            { "criteria": "Submission Format", "comment": "Incorrect file naming convention.", "marks": 5 },
+            { "criteria": "Timeliness", "comment": "Submitted after the deadline.", "marks": 0 }
+          ],
+          "overallMarks": 26
+        },
+        {
+          "studentName": "Charlie Davis",
+          "studentId": "S123458",
+          "feedback": [
+            { "criteria": "Code Quality", "comment": "Clean and easy to understand.", "marks": 9 },
+            { "criteria": "Functionality", "comment": "All requirements fulfilled.", "marks": 10 },
+            { "criteria": "Error Handling", "comment": "Good coverage of edge cases.", "marks": 9 },
+            { "criteria": "Submission Format", "comment": "Submission format followed.", "marks": 10 },
+            { "criteria": "Timeliness", "comment": "Submitted early.", "marks": 10 }
+          ],
+          "overallMarks": 48
+        }
+      ]
+    },
+
+    {
+      "assignment-tag": "Assignment 2: Data Structures",
+      "submissions": [
+        {
+          "studentName": "Alice Johnson",
+          "studentId": "S123456",
+          "feedback": [
+            { "criteria": "Implementation", "comment": "Implemented required structures correctly.", "marks": 9 },
+            { "criteria": "Efficiency", "comment": "Efficient algorithm used.", "marks": 9 },
+            { "criteria": "Testing", "comment": "Good testing but missed one edge case.", "marks": 8 },
+            { "criteria": "Documentation", "comment": "Clear explanation of methods used.", "marks": 4 },
+            { "criteria": "Originality", "comment": "Creative problem-solving evident.", "marks": 10 }
+          ],
+          "overallMarks": 40
+        },
+        {
+          "studentName": "Bob Smith",
+          "studentId": "S123457",
+          "feedback": [
+            { "criteria": "Implementation", "comment": "Implemented basic structures but incomplete.", "marks": 6 },
+            { "criteria": "Efficiency", "comment": "Algorithm could be more optimized.", "marks": 5 },
+            { "criteria": "Testing", "comment": "Minimal testing performed.", "marks": 4 },
+            { "criteria": "Documentation", "comment": "Insufficient explanation.", "marks": 5 },
+            { "criteria": "Originality", "comment": "Limited creativity in solutions.", "marks": 6 }
+          ],
+          "overallMarks": 26
+        },
+        {
+          "studentName": "Charlie Davis",
+          "studentId": "S123458",
+          "feedback": [
+            { "criteria": "Implementation", "comment": "Structures implemented perfectly.", "marks": 10 },
+            { "criteria": "Efficiency", "comment": "Highly optimized algorithm.", "marks": 10 },
+            { "criteria": "Testing", "comment": "Comprehensive testing conducted.", "marks": 10 },
+            { "criteria": "Documentation", "comment": "Detailed and clear.", "marks": 5 },
+            { "criteria": "Originality", "comment": "Highly innovative approach.", "marks": 10 }
+          ],
+          "overallMarks": 45
+        }
+      ]
+    },
+
+    {
+      "assignment-tag": "Assignment 3: Web Development",
+      "submissions": [
+        {
+          "studentName": "Alice Johnson",
+          "studentId": "S123456",
+          "feedback": [
+            { "criteria": "UI/UX Design", "comment": "User-friendly and visually appealing.", "marks": 9 },
+            { "criteria": "Responsiveness", "comment": "Works well on most devices.", "marks": 8 },
+            { "criteria": "Functionality", "comment": "All features are functional.", "marks": 10 },
+            { "criteria": "Code Structure", "comment": "Well-organized and modular.", "marks": 8 },
+            { "criteria": "Accessibility", "comment": "Adheres to accessibility standards.", "marks": 9 }
+          ],
+          "overallMarks": 44
+        },
+        {
+          "studentName": "Bob Smith",
+          "studentId": "S123457",
+          "feedback": [
+            { "criteria": "UI/UX Design", "comment": "Basic design with room for improvement.", "marks": 6 },
+            { "criteria": "Responsiveness", "comment": "Not fully responsive.", "marks": 5 },
+            { "criteria": "Functionality", "comment": "Some features are broken.", "marks": 6 },
+            { "criteria": "Code Structure", "comment": "Code is cluttered.", "marks": 5 },
+            { "criteria": "Accessibility", "comment": "Does not meet standards.", "marks": 4 }
+          ],
+          "overallMarks": 26
+        },
+        {
+          "studentName": "Charlie Davis",
+          "studentId": "S123458",
+          "feedback": [
+            { "criteria": "UI/UX Design", "comment": "Excellent design and usability.", "marks": 10 },
+            { "criteria": "Responsiveness", "comment": "Perfectly responsive.", "marks": 8 },
+            { "criteria": "Functionality", "comment": "All features work flawlessly.", "marks": 10 },
+            { "criteria": "Code Structure", "comment": "Clean and modular code.", "marks": 7 },
+            { "criteria": "Accessibility", "comment": "Exceeds accessibility standards.", "marks": 10 }
+          ],
+          "overallMarks": 45
+        }
+      ]
+    }
+  ]
+  
