@@ -6,6 +6,12 @@
         "password": "mo123"
     },
     {
+        "user_id": "MO101",
+        "role": "Module Organiser",
+        "username": "MOtest2",
+        "password": "mo223"
+    },
+    {
         "user_id": "MK100",
         "role": "Marker",
         "username": "MKtest",

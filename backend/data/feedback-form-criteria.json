@@ -1,6 +1,6 @@
 [
     {
-      "assignment-tag": "Assignment 1: Introduction to Programming",
+      "assignment_id": "A100",
       "criteria": [
         { "name": "Code Quality", "description": "Clean, readable, and well-documented code", "marks": 10 },
         { "name": "Functionality", "description": "Program meets all specified requirements", "marks": 10 },
@@ -11,7 +11,7 @@
       "totalMarks": 50
     },
     {
-      "assignment-tag": "Assignment 2: Data Structures",
+      "assignment_id": "A101",
       "criteria": [
         { "name": "Implementation", "description": "Correct implementation of required data structures", "marks": 15 },
         { "name": "Efficiency", "description": "Optimization of algorithms for time and space complexity", "marks": 10 },
@@ -22,7 +22,7 @@
       "totalMarks": 50
     },
     {
-      "assignment-tag": "Assignment 3: Web Development",
+      "assignment_id": "A102",
       "criteria": [
         { "name": "UI/UX Design", "description": "User-friendly and visually appealing design", "marks": 10 },
         { "name": "Responsiveness", "description": "Website adapts to different screen sizes and devices", "marks": 10 },
