@@ -1,6 +1,6 @@
 [
     {
-      "assignment": "Assignment 1: Introduction to Programming",
+      "assignment-tag": "Assignment 1: Introduction to Programming",
       "submissions": [
         {
           "studentName": "Alice Johnson",
@@ -42,7 +42,7 @@
     },
 
     {
-      "assignment": "Assignment 2: Data Structures",
+      "assignment-tag": "Assignment 2: Data Structures",
       "submissions": [
         {
           "studentName": "Alice Johnson",
@@ -84,7 +84,7 @@
     },
 
     {
-      "assignment": "Assignment 3: Web Development",
+      "assignment-tag": "Assignment 3: Web Development",
       "submissions": [
         {
           "studentName": "Alice Johnson",
