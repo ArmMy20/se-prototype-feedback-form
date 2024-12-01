@@ -1,0 +1,17 @@
+[
+    {
+        "s_id": "MO1",
+        "username": "MOtest",
+        "password": "mo123"
+    },
+    {
+        "s_id": "M1",
+        "username": "Mtest",
+        "password": "m123"
+    },
+    {
+        "s_id": "S1",
+        "username": "Stest",
+        "password": "s123"
+    }
+]
