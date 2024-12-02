@@ -18,9 +18,27 @@
         "password": "mk123"
     },
     {
+        "user_id": "MK101",
+        "role": "Marker",
+        "username": "MK2test",
+        "password": "mk223"
+    },
+    {
         "user_id": "ST100",
         "role": "Student",
         "username": "STtest",
         "password": "st123"
+    },
+    {
+        "user_id": "ST101",
+        "role": "Student",
+        "username": "ST1test",
+        "password": "st223"
+    },
+    {
+        "user_id": "ST102",
+        "role": "Student",
+        "username": "ST2test",
+        "password": "st323"
     }
 ]
