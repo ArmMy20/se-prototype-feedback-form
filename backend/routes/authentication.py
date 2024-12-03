@@ -1,16 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Response
 from fastapi.responses import JSONResponse
+# from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
+
 import json
+import uuid
 from pathlib import Path
+from fastapi import Request
 
 auth_router = APIRouter()
 
 DATA_FILE = Path(__file__).parent.parent / "data" / "user-accounts.json"
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
+# SESSION_COOKIE_NAME = "user_session"
 
 def load_credentials():
     try:
@@ -26,12 +27,20 @@ def validate_user(username: str, password: str):
             return user
     return None
 
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
 @auth_router.post("/login")
-async def login(login_request: LoginRequest):
+async def login(login_request: LoginRequest, response: Response):
     user = validate_user(login_request.username, login_request.password)
     if not user:
         raise HTTPException(status_code=401, detail="Invalid username or password")
+
+    # session_id = str(uuid.uuid4())
     
+    # response.set_cookie(key=SESSION_COOKIE_NAME, value=session_id, httponly=True, secure=True, samesite="Strict")
+
     if user["role"] == "Module Organiser":
         return JSONResponse(content={"message": "Welcome Module Organizer!", "dashboard": "/module-organizer-dashboard"})
     elif user["role"] == "Marker":
@@ -40,3 +49,9 @@ async def login(login_request: LoginRequest):
         return JSONResponse(content={"message": "Welcome Student!", "dashboard": "/student-dashboard"})
     else:
         raise HTTPException(status_code=403, detail="Role not authorized")
+
+# @auth_router.get("/logout")
+# async def logout(response: Response):
+
+#     response.delete_cookie(SESSION_COOKIE_NAME)
+#     return JSONResponse(content={"message": "Logged out successfully"})
