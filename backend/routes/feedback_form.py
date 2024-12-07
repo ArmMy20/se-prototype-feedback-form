@@ -2,104 +2,137 @@ from fastapi import APIRouter, HTTPException
 from typing import Dict, List, Union
 import json
 
+from pydantic import ValidationError
+
+from backend.data.feedback_submission_data import FeedbackSubmissionData
+from backend.data.json_data_file import JsonRecordFile
+from backend.models.feedback_form_models import AssignmentSubmissions, FeedbackFormCriteria, FeedbackFormCriteriaEntry, Submission
+
 feedback_form_router = APIRouter()
+feedback_criteria_data = JsonRecordFile(file_path="backend/data/feedback-form-criteria.json")
+feedback_submission_data = FeedbackSubmissionData()
 
-feedback_criteria_file_path = "backend/data/feedback-form-criteria.json"
-feedback_submission_file_path = "backend/data/feedback-submission-data.json"
-
-def read_json(file_path) -> Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]:
-    try:
-        with open(file_path, 'r') as file:
-            return json.load(file)
-        return data
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Assignments file not found")
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="Invalid JSON format in assignments file")
+def validate_new_feedback_form(new_feedback_form: FeedbackFormCriteria):
+    cur_feedback_form = feedback_criteria_data.getRecords()
+    for feedback in cur_feedback_form:   #to ensure new assignment does not already exist in json file
+        if feedback["assignment_id"] == new_feedback_form.assignment_id:
+            raise Exception(f"Feedback form for {new_feedback_form.assignment_id} already exists.")
     
-feedback_criteria_data = read_json(feedback_criteria_file_path)
-feedback_submission_data = read_json(feedback_submission_file_path)
+    return True
 
-def write_json(file_path, data: Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]):
-    if file_path == feedback_criteria_file_path:
-        try:
-            with open(file_path, 'w') as file:
-                json.dump(feedback_criteria_data, file, indent=4)
-
-
-        except Exception as e:
-            raise HTTPException(status_code=500, detail="Failed to write to feedback-form-criteria file")
-    else:
-        try:
-            with open(file_path, 'w') as file:
-                json.dump(feedback_submission_data, file, indent=4)
-            feedback_submission_data.append(data)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail="Failed to write to feedback-submission-data file")
 
 # POST /feedback-form = Save feedback forms created by module organisers
 @feedback_form_router.post("/post-new-feedback-form", tags=["feedback"])
-async def post_feedback_form(new_form: Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]):
-    required_fields = ["assignment_id", "criteria"]
-    for field in required_fields:
-        if field not in new_form:
-            raise HTTPException(status_code=400, detail=f"Missing required field '{field}'")
+async def post_feedback_form(new_form: FeedbackFormCriteria):
+    try:       
+        # validate new_form (check whether feedback form for assignment already exists (fail safe))
+        validate_new_feedback_form(new_form)
+        # persist new_form in file
+        feedback_criteria_data.addRecord(new_form)
+        # return new_form
+        return new_form
+        # on exception, return details
+    except ValidationError as ve:
+        raise HTTPException(status_code=500, details=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-    for form in feedback_criteria_data:
-        if form["assignment_id"] == new_form["assignment_id"]:
-            raise HTTPException(status_code=400, detail="Feedback form for this assignment already exists.")
+def get_criteria_list_for_assignment(a_id: int):
+    for criteria in feedback_criteria_data.getRecords():
+        if a_id == criteria["assignment_id"]:
+            return criteria["criteria"]
 
-    feedback_criteria_data.append(new_form)
-    write_json(feedback_criteria_file_path, feedback_criteria_data)
+def get_criteria_with_name_from_criteria_list(criteria_list: list[FeedbackFormCriteriaEntry], criteria_name: str):
+    for criteria in criteria_list:
+        if criteria["name"] == criteria_name:
+            return criteria
 
-    return {"message": "Feedback form saved successfully.", "feedback_form": new_form}
+def validate_feedback_marks(submission: Submission):
+    criteria_list = get_criteria_list_for_assignment(submission.assignment_id)
+    for feedback in submission.submission.feedback:
+        criteria_def = get_criteria_with_name_from_criteria_list(criteria_list, feedback.criteria)
+        if feedback.marks > criteria_def["marks"]:
+            raise Exception(f"Marks exceed maximum possible for {feedback.criteria}. Maximum is {criteria_def["marks"]}.")
+        
+def get_total_marks(a_id: int):
+    for criteria in feedback_criteria_data.getRecords():
+        if a_id == criteria["assignment_id"]:
+            return criteria["totalMarks"]
 
+def validate_submission_overall_marks(submission: Submission):
+    total_marks = get_total_marks(submission.assignment_id)
+
+    if submission.submission.overallMarks > total_marks:
+        raise Exception (f"Overall marks exceed total possible mark of {total_marks}.")
+    
+def validate_all_criteria_present(submission: Submission):
+    c_list = get_criteria_list_for_assignment(submission.assignment_id)
+    criteria_name_list = [criteria["name"] for criteria in c_list]
+    feedback_name_list = [feedback.criteria for feedback in submission.submission.feedback]
+    for criteria_name in criteria_name_list:
+        if not criteria_name in feedback_name_list:
+            raise Exception(f"Missing criteria '{criteria_name}' in submission")
 
 # POST /feedback-form = Save feedback forms submitted by markers
 @feedback_form_router.post("/save-feedback", tags=["feedback"])
-async def save_feedback(feedback: Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]):
-    required_fields = ["assignment_id", "student_id", "marker_id", "feedback", "overallMarks"]
-
-    for field in required_fields:
-        if field not in feedback:
-            raise HTTPException(status_code=400, detail=f"Missing required field '{field}'")
-
-    if not isinstance(feedback["assignment_id"], str):
-        raise HTTPException(status_code=400, detail="Field 'assignment_id' must be a string")
-    if not isinstance(feedback["student_id"], str):
-        raise HTTPException(status_code=400, detail="Field 'student_id' must be a string")
-    if not isinstance(feedback["marker_id"], str):
-        raise HTTPException(status_code=400, detail="Field 'marker_id' must be a string")
-    if not isinstance(feedback["overallMarks"], int):
-        raise HTTPException(status_code=400, detail="Field 'overallMarks' must be an integer")
-    if not isinstance(feedback["feedback"], list):
-        raise HTTPException(status_code=400, detail="Field 'feedback' must be a list of dictionaries")
+async def save_feedback(submission: Submission):
+    try:
+        #create function to validate each criteria's marks do not exceed each section's marks, and overall marks do not exceed total marks
+        validate_all_criteria_present(submission)
+        validate_feedback_marks(submission)
+        validate_submission_overall_marks(submission)
+        #add submission to feedback-submission-data json file
+        feedback_submission_data.addSubmission(submission)
+        return submission
     
-    assignment = next((item for item in feedback_submission_data if item["assignment_id"] == feedback["assignment_id"]), None)
+    except ValidationError as ve:
+        raise HTTPException(status_code=500, details=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
-    if assignment:
-        new_submission = {
-            "studentId": feedback["student_id"],
-            "markerId": feedback["marker_id"],
-            "feedback": feedback["feedback"],
-            "overallMarks": feedback["overallMarks"]
-        }
-        assignment["submissions"].append(new_submission)
 
-    else:
-        new_assignment = {
-            "assignment_id": feedback["assignment_id"],
-            "submissions": [
-                {
-                    "studentId": feedback["student_id"],
-                    "markerId": feedback["marker_id"],
-                    "feedback": feedback["feedback"],
-                    "overallMarks": feedback["overallMarks"]
-                }
-            ]
-        }
+    # required_fields = ["assignment_id", "student_id", "marker_id", "feedback", "overallMarks"]
 
-        feedback_submission_data.append(new_assignment)
+    # for field in required_fields:
+    #     if field not in feedback:
+    #         raise HTTPException(status_code=400, detail=f"Missing required field '{field}'")
+
+    # if not isinstance(feedback["assignment_id"], str):
+    #     raise HTTPException(status_code=400, detail="Field 'assignment_id' must be a string")
+    # if not isinstance(feedback["student_id"], str):
+    #     raise HTTPException(status_code=400, detail="Field 'student_id' must be a string")
+    # if not isinstance(feedback["marker_id"], str):
+    #     raise HTTPException(status_code=400, detail="Field 'marker_id' must be a string")
+    # if not isinstance(feedback["overallMarks"], int):
+    #     raise HTTPException(status_code=400, detail="Field 'overallMarks' must be an integer")
+    # if not isinstance(feedback["feedback"], list):
+    #     raise HTTPException(status_code=400, detail="Field 'feedback' must be a list of dictionaries")
     
-    write_json(feedback_submission_file_path, feedback_submission_data)
-    return {"message": "Feedback saved successfully", "feedback": feedback}
+    # assignment = next((item for item in feedback_submission_data if item["assignment_id"] == feedback["assignment_id"]), None)
+    
+    # if assignment:
+    #     new_submission = {
+    #         "studentId": feedback["student_id"],
+    #         "markerId": feedback["marker_id"],
+    #         "feedback": feedback["feedback"],
+    #         "overallMarks": feedback["overallMarks"]
+    #     }
+    #     assignment["submissions"].append(new_submission)
+
+    # else:
+    #     new_assignment = {
+    #         "assignment_id": feedback["assignment_id"],
+    #         "submissions": [
+    #             {
+    #                 "studentId": feedback["student_id"],
+    #                 "markerId": feedback["marker_id"],
+    #                 "feedback": feedback["feedback"],
+    #                 "overallMarks": feedback["overallMarks"]
+    #             }
+    #         ]
+    #     }
+
+    #     feedback_submission_data.append(new_assignment)
+    
+    # write_json(feedback_submission_file_path, feedback_submission_data)
+    # return {"message": "Feedback saved successfully", "feedback": feedback}

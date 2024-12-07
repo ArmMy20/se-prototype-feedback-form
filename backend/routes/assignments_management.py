@@ -1,15 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Cookie
-from typing import Dict
+from fastapi import APIRouter, HTTPException
 
 from pydantic import ValidationError
-from backend.data.assignment_data import AssignmentData
+from backend.data.json_data_file import JsonRecordFile
 from backend.models.assignment_model import Assignment
 
 assignment_router = APIRouter()
-assignment_data = AssignmentData()
+assignment_data = JsonRecordFile(file_path = "backend/data/assignment-data.json")
 
 def verify_new_assignment(usr_assignment: Assignment):
-    cur_assignments = assignment_data.getAssignments()
+    cur_assignments = assignment_data.getRecords()
     for assignment in cur_assignments:   #to ensure new assignment does not already exist in json file
         if assignment["assignment_name"] == usr_assignment.assignment_name:
             raise Exception(f"Assignment {usr_assignment.assignment_name} already exists.")
@@ -17,7 +16,7 @@ def verify_new_assignment(usr_assignment: Assignment):
     return True
 
 def set_id_for_new_assignment(new_assignment: Assignment):
-    cur_assignments = assignment_data.getAssignments()    
+    cur_assignments = assignment_data.getRecords()    
     last_assignment_id = cur_assignments[-1].get("assignment_id", "")
     num = int(last_assignment_id[1:])
     new_assignment.set_id(num+1)    
@@ -30,7 +29,7 @@ async def post_assignment(new_assignment: Assignment):
     try:  
         verify_new_assignment(new_assignment)
         new_assignment = set_id_for_new_assignment(new_assignment)
-        assignment_data.addAssignment(new_assignment)
+        assignment_data.addRecord(new_assignment)
         return new_assignment
     except ValidationError as ve:
         raise HTTPException(status_code=500, details=str(ve))
@@ -41,4 +40,4 @@ async def post_assignment(new_assignment: Assignment):
 #get method to retrieve assignments
 @assignment_router.get("/get-assignments", tags=["assignments"])
 async def get_assignments():
-    return assignment_data.getAssignments()
+    return assignment_data.getRecords()

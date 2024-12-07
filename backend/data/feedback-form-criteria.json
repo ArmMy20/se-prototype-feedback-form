@@ -91,21 +91,5 @@
             }
         ],
         "totalMarks": 50
-    },
-    {
-        "assignment_id": "A103",
-        "criteria": [
-            {
-                "name": "Clarity",
-                "description": "Clear and concise explanations.",
-                "marks": 10
-            },
-            {
-                "name": "Relevance",
-                "description": "Appropriateness of responses.",
-                "marks": 10
-            }
-        ],
-        "totalMarks": 20
     }
 ]
