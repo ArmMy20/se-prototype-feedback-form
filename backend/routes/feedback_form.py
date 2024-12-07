@@ -1,12 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from typing import Dict, List, Union
-import json
 
 from pydantic import ValidationError
 
 from backend.data.feedback_submission_data import FeedbackSubmissionData
 from backend.data.json_data_file import JsonRecordFile
-from backend.models.feedback_form_models import AssignmentSubmissions, FeedbackFormCriteria, FeedbackFormCriteriaEntry, Submission
+from backend.models.feedback_form_models import FeedbackFormCriteria, FeedbackFormCriteriaEntry, Submission
 
 feedback_form_router = APIRouter()
 feedback_criteria_data = JsonRecordFile(file_path="backend/data/feedback-form-criteria.json")
