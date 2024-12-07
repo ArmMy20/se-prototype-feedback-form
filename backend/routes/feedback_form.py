@@ -75,10 +75,31 @@ async def save_feedback(feedback: Dict[str, Union[str, int, List[Dict[str, Union
     if not isinstance(feedback["feedback"], list):
         raise HTTPException(status_code=400, detail="Field 'feedback' must be a list of dictionaries")
     
-    if not any(form["assignment_id"] == feedback["assignment_id"] for form in feedback_criteria_data):
-        raise HTTPException(status_code=400, detail=f"Assignment ID '{feedback['assignment_id']}' not found in feedback criteria")
-    #check if assignment already in feedback-submission-data, if not, create new entry with no data to add feedback submission
+    assignment = next((item for item in feedback_submission_data if item["assignment_id"] == feedback["assignment_id"]), None)
     
-    feedback_submission_data.append(feedback)
+    if assignment:
+        new_submission = {
+            "studentId": feedback["student_id"],
+            "markerId": feedback["marker_id"],
+            "feedback": feedback["feedback"],
+            "overallMarks": feedback["overallMarks"]
+        }
+        assignment["submissions"].append(new_submission)
+
+    else:
+        new_assignment = {
+            "assignment_id": feedback["assignment_id"],
+            "submissions": [
+                {
+                    "studentId": feedback["student_id"],
+                    "markerId": feedback["marker_id"],
+                    "feedback": feedback["feedback"],
+                    "overallMarks": feedback["overallMarks"]
+                }
+            ]
+        }
+
+        feedback_submission_data.append(new_assignment)
+    
     write_json(feedback_submission_file_path, feedback_submission_data)
     return {"message": "Feedback saved successfully", "feedback": feedback}
