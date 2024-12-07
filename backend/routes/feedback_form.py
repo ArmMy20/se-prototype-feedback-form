@@ -23,9 +23,10 @@ feedback_submission_data = read_json(feedback_submission_file_path)
 def write_json(file_path, data: Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]):
     if file_path == feedback_criteria_file_path:
         try:
-            feedback_criteria_data.append(data)     #causes trailing comma!!!!!
             with open(file_path, 'w') as file:
                 json.dump(feedback_criteria_data, file, indent=4)
+
+
         except Exception as e:
             raise HTTPException(status_code=500, detail="Failed to write to feedback-form-criteria file")
     else:
@@ -55,3 +56,8 @@ async def post_feedback_form(new_form: Dict[str, Union[str, int, List[Dict[str, 
     write_json(feedback_criteria_file_path, feedback_criteria_data)
 
     return {"message": "Feedback form saved successfully.", "feedback_form": new_form}
+
+
+@feedback_form_router.post("/save-feedback", tags=["feedback"])
+async def save_feedback(feedback: Dict[str, Union[str, int, List[Dict[str, Union[str, int]]]]]):
+    required_fields = ["assignment_id", "student_id", "marker_id", "feedback", "overallMarks"]
