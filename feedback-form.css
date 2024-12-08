@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@600&family=Syne:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 15px;
+    background-color: #f5efeb;
+    font-family: "Parkinsans", "Sans Serif";
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+h1 {
+    text-align: center;
+    font-family: "Parkinsans", "Sans Serif";
+    color: #567C8D;
+    margin-bottom: 30px;
+}
+
+.assignment-info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: "Parkinsans", "Sans Serif";
+    color: #567C8D;
+}
+
+.assignment-info h2 {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.section-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 13px;
+}
+
+.section-controls button {
+    padding: 12px 40px;
+    background-color: #567C8D;
+    color: #f5efeb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Parkinsans", "Sans Serif";
+    transition: background-color 0.3s;
+}
+
+.section-controls button:hover {
+    background-color: rgb(210, 74, 74);
+}
+
+.section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.remove-section-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #567C8D;
+    transition: color 0.3s;
+}
+
+.remove-section-btn:hover {
+    color: rgb(210, 74, 74);
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #567C8D;
+    font-weight: 500;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: "Parkinsans", "Sans Serif";
+    font-size: 14px;
+}
+
+.field textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-total-marks {
+    margin: 20px 0;
+    text-align: right;
+    background-color: #C8D9E6;
+    padding: 15px 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.form-total-marks label {
+    color: #567C8D;
+    font-weight: 500;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.form-total-marks input {
+    width: 100px;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-family: "Parkinsans", "Sans Serif";
+    font-size: 16px;
+    background-color: white;
+    color: #567C8D;
+    font-weight: 500;
+}
+
+.form-builder-btns {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.save-btn, .delete-btn {
+    padding: 12px 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Parkinsans", "Sans Serif";
+    transition: background-color 0.3s;
+}
+
+.save-btn {
+    background-color: #567C8D;
+    color: #f5efeb;
+}
+
+.delete-btn {
+    background-color: rgb(210, 74, 74);
+    color: #f5efeb;
+}
+
+.save-btn:hover {
+    background-color: rgb(210, 74, 74);
+}
+
+.delete-btn:hover {
+    background-color: rgb(180, 50, 50);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .section-controls {
+        flex-direction: column;
+    }
+
+    .section-controls button {
+        width: 100%;
+    }
+}

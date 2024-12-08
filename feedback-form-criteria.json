@@ -1,0 +1,36 @@
+[
+    {
+      "assignment_id": "A100",
+      "criteria": [
+        { "name": "Code Quality", "description": "Clean, readable, and well-documented code", "marks": 10 },
+        { "name": "Functionality", "description": "Program meets all specified requirements", "marks": 10 },
+        { "name": "Error Handling", "description": "Appropriate handling of edge cases and errors", "marks": 10 },
+        { "name": "Submission Format", "description": "Adherence to submission guidelines (file names, formats)", "marks": 10 },
+        { "name": "Timeliness", "description": "Submitted before the deadline", "marks": 10 }
+      ],
+      "totalMarks": 50
+    },
+    {
+      "assignment_id": "A101",
+      "criteria": [
+        { "name": "Implementation", "description": "Correct implementation of required data structures", "marks": 15 },
+        { "name": "Efficiency", "description": "Optimization of algorithms for time and space complexity", "marks": 10 },
+        { "name": "Testing", "description": "Comprehensive testing and validation of functionality", "marks": 10 },
+        { "name": "Documentation", "description": "Clear and concise explanation of data structures used", "marks": 5 },
+        { "name": "Originality", "description": "Evidence of original problem-solving approaches", "marks": 10 }
+      ],
+      "totalMarks": 50
+    },
+    {
+      "assignment_id": "A102",
+      "criteria": [
+        { "name": "UI/UX Design", "description": "User-friendly and visually appealing design", "marks": 10 },
+        { "name": "Responsiveness", "description": "Website adapts to different screen sizes and devices", "marks": 10 },
+        { "name": "Functionality", "description": "All features function as intended", "marks": 10 },
+        { "name": "Code Structure", "description": "Well-organized and modular codebase", "marks": 10 },
+        { "name": "Accessibility", "description": "Compliance with accessibility standards (e.g., ARIA)", "marks": 10 }
+      ],
+      "totalMarks": 50
+    }
+  ]
+  
