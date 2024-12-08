@@ -1,0 +1,190 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@600&family=Syne:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+
+
+body {
+    margin: 15px;
+    background-color: #f5efeb;
+    font-family: "Parkinsans", "Sans Serif";
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+    background-color: #C8D9E6;
+    border-radius: 13px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 120px;
+}
+
+.mh-extended {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#main-text {
+    font-size: 40px;
+    margin: 0;
+    color: #567C8D;
+}
+
+#assignment-details {
+    font-size: 20px;
+    margin: 0;
+    color: #567C8D;
+}
+
+.navb {
+    display: flex;
+    gap: 20px;
+}
+
+.nav {
+    font-size: 25px;
+    color: #567C8D;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.nav:hover {
+    color: rgb(210, 74, 74);
+}
+
+.div-2 {
+    margin-top: 30px;
+}
+
+.exdiv1 {
+    background-color: #C8D9E6;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.ogbox {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.form-container {
+    padding: 20px;
+}
+
+.criteria-section {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.criteria-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.criteria-title {
+    color: #567C8D;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.marks-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    text-align: center;
+    margin: 0 10px;
+    font-size: 16px;
+}
+
+textarea {
+    width: calc(100% - 24px);
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    resize: vertical;
+    margin-top: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+    box-sizing: border-box;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #567C8D;
+    box-shadow: 0 0 0 2px rgba(86,124,141,0.2);
+}
+
+.marks-input:focus {
+    outline: none;
+    border-color: #567C8D;
+    box-shadow: 0 0 0 2px rgba(86,124,141,0.2);
+}
+
+.total-marks {
+    text-align: right;
+    padding: 20px;
+    font-size: 18px;
+    color: #567C8D;
+    border-top: 2px solid #e9ecef;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 2px solid #e9ecef;
+}
+
+.action-button {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: "Parkinsans", "Sans Serif";
+    transition: background-color 0.3s;
+}
+
+.save-button {
+    background-color: #567C8D;
+    color: white;
+}
+
+.save-button:hover {
+    background-color: #456a7b;
+}
+
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}

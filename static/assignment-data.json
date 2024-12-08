@@ -1,0 +1,23 @@
+[
+    {
+        "assignment_id": "A100",
+        "assignment_name": "Introduction to Programming",
+        "assignment_assigned_by": "MO100",
+        "assignment_tags": ["First CSRS Project", "Practice", "Optional"],
+        "unique_tag": "Mandatory"
+    },
+    {
+        "assignment_id": "A101",
+        "assignment_name": "Data Structures",
+        "assignment_assigned_by": "MO101",
+        "assignment_tags": ["Data Structures", "Individual Assignment", "Mandatory"],
+        "unique_tag": "Complex"
+    },
+    {
+        "assignment_id": "A102",
+        "assignment_name": "Web Development",
+        "assignment_assigned_by": "MO100",
+        "assignment_tags": ["Web development", "Group Assignment", "Mandatory"],
+        "unique_tag": "Intermediate"
+    } 
+]

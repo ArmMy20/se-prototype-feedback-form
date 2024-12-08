@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/8c093f0094.js" crossorigin="anonymous"></script>
+    <title>Module Organizer's Dashboard</title>
+</head>
+<body>
+    <header class="main-header">
+        <div class="mh-extended">
+            <h1 id="main-text">DASHBOARD</h1>
+            <h2 id="db"></h2>
+        </div>
+        <div class="navb">
+            <a href="index.html"><i id="nav-home" class="fa-solid fa-house nav"></i></a>
+            <a><i id="createBtn" class="fa-solid fa-plus nav"></i></a> 
+            <a href="#"><i id="nav-logout" class="fa-solid fa-right-from-bracket nav"></i></a>
+        </div>
+    </header>
+    <div class="div-2">
+        <div class="exdiv1" id="ed1">
+            <h2>ONGOING ASSIGNMENTS</h2>
+            <div class="ogbox" id="assignments-container">
+
+            </div>
+        </div>
+        <div class="exdiv2" id="ed1">
+            <h2>TAGS</h2>
+            <div class="create-tags">
+                <div id="list-tags">
+                    <h1>Created Tags</h1>
+                    <h3 id="list-tags-js"></h3>
+                </div>
+                <form action="">
+                    <label for="tag-name">
+                        <h3>Enter a tag</h3>
+                        <input type="text">
+                        <button>+</button>
+                        <h4 id="confirmation">Tag added successfully</h4>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close-button">&times;</span>
+            <h2>Edit Assignment</h2>
+            <form id="editAssignmentForm">
+                <label for="assignment-name">Assignment name:</label>
+                <input type="text" id="assignment-name" name="assignment-name" required>
+                <br><br>
+                <label for="assignment-id">ID:</label>
+                <input type="text" id="assignment-id" name="assignment-id" required>
+                <br><br>
+                <label for="assigned-by">Assigned by:</label>
+                <span id="assigned-by" name="assigned-by"></span>
+                <br><br>
+                <label for="unique-tag">Unique Tag:</label>
+                <select id="unique-tag" name="unique-tag">
+                    <option value="">None</option>
+                </select>
+                <br><br>
+                <label for="assignment-tags">Tags:</label>
+                <h3 id="assignment-tags" name="assignment-tags"></h3>
+                <br><br>
+                <div id="tag-buttons-container">
+                    <h3>Available Tags</h3>
+                    <div id="available-tags"></div>
+                </div>
+                <br><br>
+                <div class="button-container">
+                    <button type="submit">Save Changes</button>
+                    <button type="button" id="deleteAssignmentButton">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span id="closeCreateModal" class="close-button">&times;</span>
+            <h2>Create New Assignment</h2>
+            <form id="createAssignmentForm">
+                <label for="new-assignment-name">Assignment name:</label>
+                <input type="text" id="new-assignment-name" name="new-assignment-name" required>
+                <br><br>
+                <label for="new-assignment-id">ID:</label>
+                <input type="text" id="new-assignment-id" name="new-assignment-id" required>
+                <br><br>
+                <label for="new-assigned-by">Assigned by:</label>
+                <span id="new-assigned-by" name="new-assigned-by"></span>
+                <br><br>
+                <label for="new-unique-tag">Unique Tag:</label>
+                <select id="new-unique-tag" name="new-unique-tag">
+                    <option value="">None</option>
+                </select>
+                <br><br>
+                <label for="new-assignment-tags">Tags:</label>
+                <h3 id="new-assignment-tags" name="new-assignment-tags"></h3>
+                <br><br>
+                <div id="new-tag-buttons-container">
+                    <h3>Available Tags</h3>
+                    <div id="new-available-tags"></div>
+                </div>
+                <br><br>
+                <div class="button-container">
+                    <button type="submit">Create Assignment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="fetch-data.js"></script>
+</body>
+</html>
