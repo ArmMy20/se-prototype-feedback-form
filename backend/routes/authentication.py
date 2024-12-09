@@ -1,17 +1,13 @@
-from fastapi import APIRouter, HTTPException, Depends, Response
+from fastapi import APIRouter, HTTPException, Response
 from fastapi.responses import JSONResponse
-# from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
+from pathlib import Path
 
 import json
-import uuid
-from pathlib import Path
-from fastapi import Request
 
 auth_router = APIRouter()
 
 DATA_FILE = Path(__file__).parent.parent / "data" / "user-accounts.json"
-# SESSION_COOKIE_NAME = "user_session"
 
 def load_credentials():
     try:
@@ -37,21 +33,27 @@ async def login(login_request: LoginRequest, response: Response):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid username or password")
 
-    # session_id = str(uuid.uuid4())
-    
-    # response.set_cookie(key=SESSION_COOKIE_NAME, value=session_id, httponly=True, secure=True, samesite="Strict")
-
     if user["role"] == "Module Organiser":
-        return JSONResponse(content={"message": "Welcome Module Organizer!", "dashboard": "/module-organizer-dashboard"})
+        return JSONResponse(content={
+            "message": f"Welcome {user['username']}! Module Organizer", 
+            "dashboard": "/module-organizer-dashboard", 
+            "role": "Module Organiser", 
+            "username": user["username"]
+        })
     elif user["role"] == "Marker":
-        return JSONResponse(content={"message": "Welcome Marker!", "dashboard": "/marker-dashboard"})
+        return JSONResponse(content={
+            "message": f"Welcome {user['username']}! Marker", 
+            "dashboard": "/marker-dashboard", 
+            "role": "Marker", 
+            "username": user["username"]
+        })
     elif user["role"] == "Student":
-        return JSONResponse(content={"message": "Welcome Student!", "dashboard": "/student-dashboard"})
+        return JSONResponse(content={
+            "message": f"Welcome {user['username']}! Student", 
+            "dashboard": "/student-dashboard", 
+            "role": "Student", 
+            "username": user["username"]
+        })
     else:
         raise HTTPException(status_code=403, detail="Role not authorized")
 
-# @auth_router.get("/logout")
-# async def logout(response: Response):
-
-#     response.delete_cookie(SESSION_COOKIE_NAME)
-#     return JSONResponse(content={"message": "Logged out successfully"})

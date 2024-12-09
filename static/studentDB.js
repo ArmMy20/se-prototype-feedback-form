@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const welcomeText = document.getElementById('welcome-text');
     if (welcomeText) {
-        welcomeText.textContent = `Welcome, ${currentUser.username}`;
+        welcomeText.textContent = `Welcome back, ${currentUser.username}!`;
     }
 
     loadStudentAssignments(currentUser.user_id);

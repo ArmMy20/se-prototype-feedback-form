@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Display marker name in the header
-    document.getElementById('db').textContent = `Welcome, ${currentUser.username}`;
+    document.getElementById('db').textContent = `Welcome back, ${currentUser.username}!`;
 
     // Load assignments for this marker
     loadMarkerAssignments(currentUser.user_id);
