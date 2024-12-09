@@ -3,42 +3,42 @@
         "user_id": "MO100",
         "role": "Module Organiser",
         "username": "MOtest",
-        "password": "mo123"
+        "password": "$2b$12$D5.GjS9dbTvHQY1MDQ.hgO78NqHqOtb2Lre2yrFg6PpUNPvd3TSNa"
     },
     {
         "user_id": "MO101",
         "role": "Module Organiser",
         "username": "MOtest2",
-        "password": "mo223"
+        "password": "$2b$12$z2UkTry7nX3NY/lC.NMef.EaKv/rlFRcdi0IP8IVUMbK8QDSQS/iS"
     },
     {
         "user_id": "MK100",
         "role": "Marker",
         "username": "MKtest",
-        "password": "mk123"
+        "password": "$2b$12$v4AXAU7Q.UgFjU9jnwzoZu0tQ8I0seBN8feuby4VJlOWuqsBLaERq"
     },
     {
         "user_id": "MK101",
         "role": "Marker",
         "username": "MK2test",
-        "password": "mk223"
+        "password": "$2b$12$iiNS6SleaywaRDtL4NphF.c04IHOUNkZ7ZxJlM4S5Nuwbb1h3ONHm"
     },
     {
         "user_id": "ST100",
         "role": "Student",
         "username": "STtest",
-        "password": "st123"
+        "password": "$2b$12$WPOSv7nBJZ1BREgsYL6LLuL4oCUaj6GxiYtUaqB2yvI/yai.sDfw."
     },
     {
         "user_id": "ST101",
         "role": "Student",
         "username": "ST1test",
-        "password": "st223"
+        "password": "$2b$12$l0nkr89WI1lSjOprIUA9veD2N/pchaPWYvChEQeqRAoKh77gh9nie"
     },
     {
         "user_id": "ST102",
         "role": "Student",
         "username": "ST2test",
-        "password": "st323"
+        "password": "$2b$12$4AQAKgbdHlJNubU8og8oE.JDMPRV/KOJPAi2KiIghHXKqFO9Ddxa."
     }
 ]
