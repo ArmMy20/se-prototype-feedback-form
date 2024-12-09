@@ -1,0 +1,17 @@
+[
+    {
+        "assignment_id": "A100",
+        "name": "Web Development Basics",
+        "description": "Introduction to HTML, CSS, and JavaScript"
+    },
+    {
+        "assignment_id": "A101",
+        "name": "Database Design",
+        "description": "SQL and Database Management"
+    },
+    {
+        "assignment_id": "A102",
+        "name": "Frontend Development",
+        "description": "Advanced Web UI Implementation"
+    }
+] 

@@ -1,0 +1,109 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@600&family=Syne:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 15px;
+    background-color: #f5efeb;
+}
+
+.main-header {
+    padding: 25px 30px;
+    border-radius: 25px;
+    background-color: #D9E6F0;
+    margin-bottom: 20px;
+}
+
+#main-text {
+    font-family: "Syne", "Sans Serif";
+    font-size: 48px;
+    color: #456B7C;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+
+#assignment-details {
+    font-family: "Lato", "Sans Serif";
+    font-size: 20px;
+    color: #567C8D;
+    font-weight: 500;
+}
+
+.div-2 {
+    background-color: #D9E6F0;
+    border-radius: 25px;
+    padding: 25px;
+}
+
+.criteria-section {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.criteria-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.criteria-title {
+    font-family: "Lato", "Sans Serif";
+    font-size: 18px;
+    color: #456B7C;
+}
+
+.marks-display {
+    font-family: "Lato", "Sans Serif";
+    font-weight: 600;
+    color: #456B7C;
+}
+
+.instructions-text, .feedback-text {
+    font-family: "Lato", "Sans Serif";
+    color: #5A5A5A;
+    margin: 10px 0;
+    line-height: 1.4;
+}
+
+.total-marks {
+    background: #456B7C;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    font-family: "Lato", "Sans Serif";
+    font-size: 18px;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.action-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: "Lato", "Sans Serif";
+    font-weight: 600;
+    cursor: pointer;
+    background-color: #456B7C;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #567C8D;
+}
