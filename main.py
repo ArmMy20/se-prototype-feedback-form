@@ -6,6 +6,7 @@ from backend.routes.feedback_form import feedback_form_router
 from backend.routes.student_feedback_retrieval import student_router
 from backend.routes.marker_feedback_retrieval import marker_router
 from backend.routes.mo_feedback_retrieval import module_organizer_router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 app.include_router(auth_router)
@@ -16,8 +17,16 @@ app.include_router(marker_router)
 app.include_router(module_organizer_router)
 
 
-# @app.get("/")
-# async def read_root():
-#     return {"Hello": "World"}
+@app.get("/")
+async def read_root():
+    return {"Hello": "World"}
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500"],  # Allow requests from the frontend
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (e.g., GET, POST)
+    allow_headers=["*"],  # Allow all headers
+)

@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Get current user from localStorage
+document.addEventListener('DOMContentLoaded', function () {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     console.log("Current User:", currentUser);
 
@@ -60,8 +59,8 @@ async function loadStudentAssignments(studentId) {
 
                 const fileIcon = assignmentCard.querySelector('.file-icon');
                 fileIcon.addEventListener('click', () => {
-                    localStorage.setItem('currentGradedSubmission', JSON.stringify(submission));
-                    window.open('view-feedback.html', '_blank', 'width=800,height=600');
+                    const feedbackUrl = `view-feedback.html?assignmentId=${encodeURIComponent(assignment.assignment_id)}&studentId=${encodeURIComponent(submission.studentId)}`;
+                    window.open(feedbackUrl, '_blank', 'width=800,height=600');
                 });
 
                 container.appendChild(assignmentCard);
