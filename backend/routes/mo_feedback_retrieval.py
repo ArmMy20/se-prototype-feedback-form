@@ -1,7 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from typing import List, Dict, Any
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated, List, Dict, Any
 from pathlib import Path
 import json
+
+from backend.data.user_accounts import UserRole
+from backend.routes.authentication import get_current_user
 
 module_organizer_router = APIRouter()
 
@@ -19,7 +22,8 @@ except FileNotFoundError:
 async def get_all_feedback_for_module_organizer(
     assignment_id: str,
     student_id: str,
-    marker_id: str
+    marker_id: str,
+    current_user: Annotated[UserRole, Depends(get_current_user)]
 ):
 
     """

@@ -1,10 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException
 
 from pydantic import ValidationError
 
 from backend.data.feedback_submission_data import FeedbackSubmissionData
 from backend.data.json_data_file import JsonRecordFile
+from backend.data.user_accounts import UserRole
 from backend.models.feedback_form_models import FeedbackFormCriteria, FeedbackFormCriteriaEntry, Submission
+from backend.routes.authentication import get_current_user
 
 feedback_form_router = APIRouter()
 feedback_criteria_data = JsonRecordFile(file_path="backend/data/feedback-form-criteria.json")
@@ -21,7 +24,7 @@ def validate_new_feedback_form(new_feedback_form: FeedbackFormCriteria):
 
 # POST /feedback-form = Save feedback forms created by module organisers
 @feedback_form_router.post("/post-new-feedback-form", tags=["feedback"])
-async def post_feedback_form(new_form: FeedbackFormCriteria):
+async def post_feedback_form(new_form: FeedbackFormCriteria, current_user: Annotated[UserRole, Depends(get_current_user)]):
     try:       
         # validate new_form (check whether feedback form for assignment already exists (fail safe))
         validate_new_feedback_form(new_form)
@@ -73,7 +76,7 @@ def validate_all_criteria_present(submission: Submission):
 
 # POST /feedback-form = Save feedback forms submitted by markers
 @feedback_form_router.post("/save-feedback", tags=["feedback"])
-async def save_feedback(submission: Submission):
+async def save_feedback(submission: Submission, current_user: Annotated[UserRole, Depends(get_current_user)]):
     try:
         #create function to validate each criteria's marks do not exceed each section's marks, and overall marks do not exceed total marks
         validate_all_criteria_present(submission)
