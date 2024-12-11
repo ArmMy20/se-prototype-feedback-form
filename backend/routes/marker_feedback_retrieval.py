@@ -1,7 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from typing import List, Dict, Any
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated, List, Dict, Any
 from pathlib import Path
 import json
+
+from backend.data.user_accounts import UserRole
+from backend.routes.authentication import get_current_user
 
 marker_router = APIRouter()
 
@@ -16,7 +19,8 @@ except FileNotFoundError:
 @marker_router.get("/marker/feedback", response_model=List[Dict[str, Any]])
 async def get_feedback_by_marker(
     assignment_id: str, 
-    marker_id: str
+    marker_id: str,
+    current_user: Annotated[UserRole, Depends(get_current_user)]
 ):
     """
     Retrieve all feedback entered by a specific marker for a given assignment using query parameters.

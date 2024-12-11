@@ -1,21 +1,30 @@
-document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault();
+document.querySelector('form').addEventListener('submit', async function(event) {    
+    event.preventDefault();        
+    submitForm();
+});
 
+function submitForm() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    fetch('user-accounts.json')
-        .then(response => response.json())
-        .then(users => {
-            const user = users.find(u => 
-                u.username === username && 
-                u.password === password
-            );
+    var endPoint = 'http://127.0.0.1:8000/token';
 
-            if (user) {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    try {
+        const response = fetch("/token", {
+            method: 'POST', 
+            body: formData             
+        })
+        .then((response) => response.json())
+        .then((user) => {            
+            if (user.username) {
                 localStorage.setItem('currentUser', JSON.stringify(user));
+                console.log(localStorage);
                 
-                const role = user.role.toLowerCase();
+                const role =  user.role.toLowerCase();               
                 
                 switch (role) {
                     case 'module organiser':
@@ -34,11 +43,12 @@ document.querySelector('form').addEventListener('submit', function(event) {
                 showError('Invalid username or password!');
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showError('An error occurred during login');
-        });
-});
+        .catch((error) => console.log(error));                
+    } catch (error) {
+        console.error('Error:', error);
+        showError('An error occurred during login');
+    }
+}
 
 function showError(message) {
     const existingError = document.getElementById('errorMessage');

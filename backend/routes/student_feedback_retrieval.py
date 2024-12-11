@@ -1,7 +1,10 @@
-from fastapi import APIRouter, HTTPException
-from typing import Dict, Any
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Annotated, Dict, Any
 from pathlib import Path
 import json
+
+from backend.data.user_accounts import UserRole
+from backend.routes.authentication import get_current_user
 
 student_router = APIRouter()
 
@@ -28,7 +31,8 @@ student_router = APIRouter()
 @student_router.get("/student/feedback", response_model=Dict[str, Any])
 async def get_student_feedback(
     assignment_id: str, 
-    student_id: str
+    student_id: str,
+    current_user: Annotated[UserRole, Depends(get_current_user)]
 ):
 
     """
