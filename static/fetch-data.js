@@ -22,12 +22,6 @@ function migrateOldData() {
             oldAssignments.filter(a => a.assignment_assigned_by !== currentUserId)
         ));
     }
-    
-    const oldTags = JSON.parse(localStorage.getItem('tags')) || [];
-    if (oldTags.length > 0) {
-        localStorage.setItem(`tags_${currentUserId}`, JSON.stringify(oldTags));
-        localStorage.removeItem('tags');
-    }
 }
 
 function initializeApp() {
@@ -42,7 +36,6 @@ function loadUserData() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     
     if (!currentUser) {
-
         window.location.href = 'login-frontend-page.html';
         return false; 
     }
@@ -61,17 +54,17 @@ function loadAssignmentData() {
     
     const currentUserId = currentUser.user_id;
     
-    let assignments = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
-    if (assignments.length === 0) {
-        
-        const oldAssignments = JSON.parse(localStorage.getItem('assignments')) || [];
-        assignments = oldAssignments.filter(a => a && a.assignment_assigned_by === currentUserId);
-    }
-
-    console.log('Loading assignments for user:', currentUserId);
-    console.log('Found assignments:', assignments);
-    
-    displayAssignments(assignments);
+    fetch('http://127.0.0.1:8000/get-assignments')
+        .then(response => response.json())
+        .then(assignments => {
+            // Filter assignments by current user (if needed)
+            const userAssignments = assignments.filter(a => a.assignment_assigned_by === currentUserId);
+            displayAssignments(userAssignments);
+        })
+        .catch(error => {
+            console.error('Error fetching assignments:', error);
+            alert(`Failed to load assignments: ${error.message}`);
+        });
 }
 
 function displayAssignments(assignmentData) {
@@ -83,115 +76,65 @@ function displayAssignments(assignmentData) {
     }
     
     const container = document.getElementById('assignments-container');
-    const listTagsDiv = document.getElementById('list-tags-js');
-    
-    console.log('Displaying assignments:', assignmentData);
-    console.log('Container element:', container);
-    console.log('Tags div element:', listTagsDiv);
-
-    if (!container || !listTagsDiv) {
-        console.error('Required DOM elements not found');
+    if (!container) {
+        console.error('Required DOM element not found');
         return;
     }
 
-    container.innerHTML = '';
-    const allTags = new Set();
+    container.innerHTML = ''; // Clear existing assignments
 
     if (Array.isArray(assignmentData) && assignmentData.length > 0) {
-        assignmentData.forEach(assignment => {
-            if (!assignment) return;
-            
+        assignmentData.forEach(assignment => {         
             const assignmentDiv = document.createElement('div');
             assignmentDiv.classList.add('assignment-box');
             assignmentDiv.innerHTML = `
                 <h3>${assignment.assignment_name || 'Unnamed Assignment'}</h3>
                 <p class="assignment-id">ID: ${assignment.assignment_id || 'N/A'}</p>
                 <p>Assigned By: ${assignment.assignment_assigned_by || 'Unknown'}</p>
-                <p>Unique Tag: ${assignment.unique_tag || 'None'}</p>
-                <p>Tags: ${(assignment.assignment_tags || []).join(', ') || 'None'}</p>
+                <p>Assignment Tags: ${assignment.assignment_tags || 'None'}</p>
                 <div class="assignment-icons">
                     <i class="fa-solid fa-pen-to-square edit-icon"></i>
-                    <a href="feedback.html" target="blank" class="tag-link">
-                        <i class="fa-solid fa-tag tag-icon"></i>
-                    </a>
                 </div>
             `;
             container.appendChild(assignmentDiv);
 
-            if (assignment.assignment_tags) {
-                assignment.assignment_tags.forEach(tag => {
-                    if (tag) allTags.add(tag);
-                });
-            }
-
-            const tagIcon = assignmentDiv.querySelector('.tag-icon');
-            tagIcon.addEventListener('click', function() {
-                localStorage.setItem('currentFeedbackAssignment', assignment.assignment_id);
-                window.location.href = 'feedback-form-builder.html';
+            const editIcon = assignmentDiv.querySelector('.edit-icon');
+            editIcon.addEventListener('click', function () {
+                handleEditAssignment(assignment);
             });
         });
     } else {
-        console.log('No assignments to display');
         container.innerHTML = '<p>No assignments found.</p>';
     }
+}
 
-    const storedTags = getTagsFromLocalStorage();
-    console.log('Stored tags:', storedTags);
-    
-    if (Array.isArray(storedTags)) {
-        storedTags.forEach(tag => {
-            if (tag) allTags.add(tag);
-        });
-    }
-
-    displayTags(Array.from(allTags), listTagsDiv);
-
-    const editIcons = document.querySelectorAll('.edit-icon');
-    editIcons.forEach((icon, index) => {
-        icon.addEventListener('click', (e) => {
-            handleEditIconClick(e, assignmentData, index);
-        });
-    });
-
-    const tagIcons = document.querySelectorAll('.tag-icon');
-    tagIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-            const assignmentId = this.getAttribute('data-assignment-id');
-            console.log('Clicking tag icon for assignment:', assignmentId); // Debug log
-            window.location.href = `feedback-form-builder.html?assignmentId=${assignmentId}`;
-        });
-    });
+function handleEditAssignment(assignment) {
+    const editModal = document.getElementById('editModal');
+    editModal.style.display = 'block';
+    document.getElementById('assignment-name').value = assignment.assignment_name;
+    document.getElementById('assignment-id').textContent = assignment.assignment_id;
+    document.getElementById('assigned-by').textContent = assignment.assignment_assigned_by;
+    document.getElementById('assignment-tags').value = assignment.assignment_tags || '';
 }
 
 function handleEditIconClick(e, assignmentData, index) {
     const assignmentDiv = e.target.closest('.assignment-box');
     const assignmentName = assignmentDiv.querySelector('h3').textContent;
     const assignmentId = assignmentDiv.querySelector('.assignment-id').textContent.replace('ID: ', '');
-    const uniqueTag = assignmentDiv.querySelector('p:nth-child(4)').textContent
-        .replace('Unique Tag: ', '');
-    const assignmentTags = assignmentDiv.querySelector('p:nth-child(5)').textContent
-        .replace('Tags: ', '')
-        .split(', ')
-        .filter(tag => tag.trim() !== '');
+    const uniqueTag = assignmentDiv.querySelector('p:nth-child(4)').textContent.replace('Unique Tag: ', '');
 
     document.getElementById('assignment-name').value = assignmentName;
     document.getElementById('assignment-id').value = assignmentId;
-    
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    document.getElementById('assigned-by').textContent = currentUser.user_id;
 
     const uniqueTagSelect = document.getElementById('unique-tag');
     uniqueTagSelect.innerHTML = '<option value="">None</option>';
-    
-    const allTags = Array.from(document.querySelectorAll('#list-tags-js .tag-item span'))
-        .map(span => span.textContent);
     
     const usedUniqueTags = assignmentData
         .filter((_, idx) => idx !== index)
         .map(a => a.unique_tag)
         .filter(Boolean);
     
-    const availableTags = allTags.filter(tag => !usedUniqueTags.includes(tag));
+    const availableTags = usedUniqueTags.filter(tag => tag !== uniqueTag);
     
     availableTags.forEach(tag => {
         const option = document.createElement('option');
@@ -204,112 +147,66 @@ function handleEditIconClick(e, assignmentData, index) {
         uniqueTagSelect.value = uniqueTag;
     }
 
-
-    const selectedTagsContainer = document.getElementById('assignment-tags');
-    selectedTagsContainer.innerHTML = '';
-    
-    assignmentTags.forEach(tag => {
-        if (tag && tag !== uniqueTag) {
-            const selectedTagButton = document.createElement('button');
-            selectedTagButton.type = 'button';
-            selectedTagButton.classList.add('tag-button', 'selected-tag');
-            selectedTagButton.textContent = tag;
-            
-            selectedTagButton.addEventListener('click', () => {
-                selectedTagButton.remove();
-                displayTagsInModal(availableTags, uniqueTag);
-            });
-            
-            selectedTagsContainer.appendChild(selectedTagButton);
-        }
-    });
-
-    displayTagsInModal(availableTags, uniqueTag);
-
     const modal = document.getElementById('editModal');
     modal.style.display = 'block';
     modal.setAttribute('data-assignment-index', index);
 }
 
-function saveUpdatedAssignmentData(updatedAssignment, index) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const currentUserId = currentUser.user_id;
-    
-    const assignmentData = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
-    assignmentData[index] = updatedAssignment; 
-    localStorage.setItem(`assignments_${currentUserId}`, JSON.stringify(assignmentData)); 
+function saveUpdatedAssignmentData(updatedAssignment) {
+    fetch('http://127.0.0.1:8000/post-assignment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser')).token}`
+        },
+        body: JSON.stringify(updatedAssignment)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update assignment');
+            }
+            return response.json();
+        })
+        .then(() => {
+            alert('Assignment updated successfully!');
+            loadAssignmentData();
+        })
+        .catch(error => {
+            console.error('Error updating assignment:', error);
+            alert('Error updating assignment. Please try again.');
+        });
 }
 
-function saveTagsToLocalStorage(updatedTags) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const currentUserId = currentUser.user_id;
-    localStorage.setItem(`tags_${currentUserId}`, JSON.stringify(updatedTags));
+function setupEventListeners() {
+    setupModalEvents();
+    setupEditFormEvents();
+    setupLogoutEvent();
 }
 
-function displayTags(tags, container) {
-    if (!container) return;
-    
-    container.innerHTML = ''; 
-    
-    const sortedTags = [...tags].sort((a, b) => a.localeCompare(b));
-    
-    sortedTags.forEach(tag => {
-        if (!tag) return;
-        
-        const tagItem = document.createElement('div');
-        tagItem.classList.add('tag-item'); 
-
-        const tagText = document.createElement('span');
-        tagText.textContent = tag;
-
-        const deleteIcon = document.createElement('i');
-        deleteIcon.classList.add('fa-solid', 'fa-x'); 
-
-        deleteIcon.addEventListener('click', () => {
-            removeTag(tag); 
+async function createNewAssignment(newAssignment) {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/post-assignment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser')).token}`
+            },
+            body: JSON.stringify(newAssignment)
         });
 
-        tagItem.appendChild(tagText);
-        tagItem.appendChild(deleteIcon);
-        container.appendChild(tagItem);
-    });
-}
+        if (!response.ok) {
+            throw new Error('Failed to create assignment');
+        }
 
-function displayTagsInModal(tags, uniqueTag) {
-    const modalTagContainer = document.getElementById('available-tags');
-    modalTagContainer.innerHTML = '';
-    
-    const selectedTagsContainer = document.getElementById('assignment-tags');
-    const selectedTags = Array.from(selectedTagsContainer.querySelectorAll('.selected-tag'))
-        .map(button => button.textContent);
-    
-    const availableTags = tags.filter(tag => 
-        !selectedTags.includes(tag) && tag !== uniqueTag
-    );
-    
-    availableTags.forEach(tag => {
-        const tagButton = document.createElement('button');
-        tagButton.type = 'button';
-        tagButton.classList.add('tag-button');
-        tagButton.textContent = tag;
-        
-        tagButton.addEventListener('click', () => {
-            const selectedTagButton = document.createElement('button');
-            selectedTagButton.type = 'button';
-            selectedTagButton.classList.add('tag-button', 'selected-tag');
-            selectedTagButton.textContent = tag;
-            
-            selectedTagButton.addEventListener('click', () => {
-                selectedTagButton.remove();
-                displayTagsInModal(tags, uniqueTag);
-            });
-            
-            selectedTagsContainer.appendChild(selectedTagButton);
-            tagButton.remove();
-        });
-        
-        modalTagContainer.appendChild(tagButton);
-    });
+        alert('Assignment created successfully!');
+        loadAssignmentData(); // Refresh assignments
+
+        document.getElementById('createModal').style.display = 'none';
+        document.getElementById('createAssignmentForm').reset();
+    } catch (error) {
+        console.error('Error creating assignment:', error);
+        alert('Failed to create assignment. Please try again.');
+    }
 }
 
 function getTagsFromLocalStorage() {
@@ -317,231 +214,106 @@ function getTagsFromLocalStorage() {
     if (!currentUser) return [];
     
     const currentUserId = currentUser.user_id;
-    let tags = JSON.parse(localStorage.getItem(`tags_${currentUserId}`)) || [];
-    
-    if (tags.length === 0) {
-        tags = JSON.parse(localStorage.getItem('tags')) || [];
-    }
-    
-    console.log('Retrieved tags for user', currentUserId, ':', tags);
-    return tags;
-}
 
-function removeTag(tag) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const currentUserId = currentUser.user_id;
-    
-    const tags = getTagsFromLocalStorage();
-    const updatedTags = tags.filter(t => t !== tag); 
-    localStorage.setItem(`tags_${currentUserId}`, JSON.stringify(updatedTags)); 
+    // Retrieve tags specific to the current user
+    const userTags = JSON.parse(localStorage.getItem(`tags_${currentUserId}`)) || [];
 
-    const assignments = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
-    const updatedAssignments = assignments.map(assignment => {
-
-        assignment.assignment_tags = assignment.assignment_tags.filter(t => t !== tag);
-        
-        if (assignment.unique_tag === tag) {
-            assignment.unique_tag = '';
-        }
-        return assignment;
-    });
-
-    localStorage.setItem(`assignments_${currentUserId}`, JSON.stringify(updatedAssignments));
-
-    displayTags(updatedTags, document.getElementById('list-tags-js'));
-    displayAssignments(updatedAssignments);
-}
-
-function setupEventListeners() {
-    setupModalEvents();
-    setupTagFormEvents();
-    setupEditFormEvents();
-    setupLogoutEvent();
+    console.log('Retrieved unique tags for user:', currentUserId, '=>', userTags);
+    return userTags;
 }
 
 function setupModalEvents() {
-    document.getElementById('closeModal').addEventListener('click', () => {
+    // Close modal handlers
+    const closeModal = () => {
         document.getElementById('editModal').style.display = 'none';
+        document.getElementById('createModal').style.display = 'none';
+        document.getElementById('createAssignmentForm').reset();
+        document.getElementById('new-unique-tag').innerHTML = ''; // Reset unique tag dropdown
+    };
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('closeCreateModal').addEventListener('click', closeModal);
+
+    window.addEventListener('click', (event) => {
+        if (
+            event.target === document.getElementById('editModal') ||
+            event.target === document.getElementById('createModal')
+        ) {
+            closeModal();
+        }
     });
 
     const createBtn = document.getElementById('createBtn');
     const createModal = document.getElementById('createModal');
-    const closeCreateModal = document.getElementById('closeCreateModal');
 
+    // Open the create assignment modal
     createBtn.addEventListener('click', () => {
         createModal.style.display = 'block';
-        document.getElementById('new-assigned-by').textContent = "MO101";
-        document.getElementById('new-assignment-tags').innerHTML = '';
+        document.getElementById('new-assignment-name').value = '';
+        document.getElementById('new-unique-tag').innerHTML = '';
+
         const allTags = getTagsFromLocalStorage();
         const assignments = JSON.parse(localStorage.getItem('assignments')) || [];
-        
-        const usedUniqueTags = assignments
-            .map(a => a.unique_tag)
-            .filter(tag => tag);
-        
+
+        // Filter out tags already used as unique tags
+        const usedUniqueTags = assignments.map(a => a.unique_tag).filter(Boolean);
         const availableTags = allTags.filter(tag => !usedUniqueTags.includes(tag));
 
+        // Populate unique tag dropdown
         const uniqueTagSelect = document.getElementById('new-unique-tag');
-        uniqueTagSelect.innerHTML = '<option value="">None</option>';
-        
+        uniqueTagSelect.innerHTML = '<option value="">None</option>'; // Default option
         availableTags.forEach(tag => {
             const option = document.createElement('option');
             option.value = tag;
             option.textContent = tag;
             uniqueTagSelect.appendChild(option);
         });
-
-        const modalTagContainer = document.getElementById('new-available-tags');
-        modalTagContainer.innerHTML = '';
-        
-        availableTags.forEach(tag => {
-            const tagButton = document.createElement('button');
-            tagButton.type = 'button';
-            tagButton.classList.add('tag-button');
-            tagButton.textContent = tag;
-            
-            tagButton.addEventListener('click', () => {
-                const selectedTagsContainer = document.getElementById('new-assignment-tags');
-                const selectedTagButton = document.createElement('button');
-                selectedTagButton.type = 'button';
-                selectedTagButton.classList.add('tag-button', 'selected-tag');
-                selectedTagButton.textContent = tag;
-                
-                selectedTagButton.addEventListener('click', () => {
-                    selectedTagButton.remove();
-                    modalTagContainer.appendChild(tagButton);
-                });
-                
-                selectedTagsContainer.appendChild(selectedTagButton);
-                tagButton.remove();
-            });
-            
-            modalTagContainer.appendChild(tagButton);
-        });
     });
 
-    closeCreateModal.addEventListener('click', () => {
-        createModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === createModal) {
-            createModal.style.display = 'none';
-        }
-    });
-
-    document.getElementById('createAssignmentForm').addEventListener('submit', (e) => {
+    // Handle the form submission to create a new assignment
+    document.getElementById('createAssignmentForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const currentUserId = currentUser.user_id;
-        const name = document.getElementById('new-assignment-name').value.trim();
-        const id = document.getElementById('new-assignment-id').value.trim();
-        const uniqueTag = document.getElementById('new-unique-tag').value.trim();
-        
-        if (!name || !id) {
-            alert('Please fill in all required fields');
-            return;
-        }
-        
-        const assignments = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
-        
-        if (assignments.some(a => a.assignment_id === id)) {
-            alert('You already have an assignment with this ID. Please use a different ID.');
-            return;
-        }
 
-        // Remove the unique tag from other assignments' regular tags
-        if (uniqueTag) {
-            assignments.forEach(assignment => {
-                assignment.assignment_tags = assignment.assignment_tags.filter(tag => 
-                    tag !== uniqueTag
-                );
-            });
+        const name = document.getElementById('new-assignment-name').value.trim();
+        const uniqueTag = document.getElementById('new-unique-tag').value.trim();
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+        if (!name) {
+            alert('Assignment name is required');
+            return;
         }
 
         const newAssignment = {
             assignment_name: name,
-            assignment_id: id,
-            assignment_assigned_by: currentUserId,
-            unique_tag: uniqueTag,
-            assignment_tags: Array.from(document.getElementById('new-assignment-tags').querySelectorAll('.selected-tag'))
-                .map(button => button.textContent)
-                .filter(tag => tag !== uniqueTag)
+            assignment_assigned_by: currentUser.user_id,
+            unique_tag: uniqueTag || null // Allow unique tags to be optional
         };
 
-        assignments.push(newAssignment);
-        localStorage.setItem(`assignments_${currentUserId}`, JSON.stringify(assignments));
+        try {
+            // Send the new assignment to the backend
+            const response = await fetch('http://127.0.0.1:8000/post-assignment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${currentUser.token}` // Assuming a token is required
+                },
+                body: JSON.stringify(newAssignment)
+            });
 
-        e.target.reset();
-        document.getElementById('new-assignment-tags').innerHTML = '';
-        document.getElementById('new-available-tags').innerHTML = '';
+            if (!response.ok) {
+                throw new Error('Failed to create assignment');
+            }
 
-        createModal.style.display = 'none';
-        displayAssignments(assignments);
-    });
+            alert('Assignment Created Successfully!');
+            closeModal();
 
-    document.getElementById('closeModal').addEventListener('click', () => {
-        const editModal = document.getElementById('editModal');
-        editModal.style.display = 'none';
-        document.getElementById('editAssignmentForm').reset();
-        document.getElementById('assignment-tags').innerHTML = '';
-        document.getElementById('available-tags').innerHTML = '';
-    });
-
-    document.getElementById('closeCreateModal').addEventListener('click', () => {
-        const createModal = document.getElementById('createModal');
-        createModal.style.display = 'none';
-        document.getElementById('createAssignmentForm').reset();
-        document.getElementById('new-assignment-tags').innerHTML = '';
-        document.getElementById('new-available-tags').innerHTML = '';
-    });
-
-    window.addEventListener('click', (event) => {
-        const editModal = document.getElementById('editModal');
-        const createModal = document.getElementById('createModal');
-        
-        if (event.target === editModal) {
-            editModal.style.display = 'none';
-            document.getElementById('editAssignmentForm').reset();
-            document.getElementById('assignment-tags').innerHTML = '';
-            document.getElementById('available-tags').innerHTML = '';
-        }
-        
-        if (event.target === createModal) {
-            createModal.style.display = 'none';
-            document.getElementById('createAssignmentForm').reset();
-            document.getElementById('new-assignment-tags').innerHTML = '';
-            document.getElementById('new-available-tags').innerHTML = '';
+            // Reload the assignments list
+            loadAssignmentData();
+        } catch (error) {
+            console.error('Error creating assignment:', error);
+            alert('Error creating assignment. Please try again.');
         }
     });
-}
-
-function setupTagFormEvents() {
-    document.querySelector('form').addEventListener('submit', handleTagSubmission);
-}
-
-function handleTagSubmission(e) {
-    e.preventDefault();
-    const input = e.target.querySelector('input');
-    const newTag = input.value.trim();
-    
-    if (newTag) {
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const currentUserId = currentUser.user_id;
-        
-        const assignments = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
-        
-        const currentTags = getTagsFromLocalStorage();
-        const updatedTags = [...new Set([...currentTags, newTag])];
-        saveTagsToLocalStorage(updatedTags);
-        
-        input.value = '';
-        
-        displayAssignments(assignments);
-        
-        input.focus();
-    }
 }
 
 function setupEditFormEvents() {
@@ -564,36 +336,12 @@ function setupEditFormEvents() {
         const assignmentData = JSON.parse(localStorage.getItem(`assignments_${currentUserId}`)) || [];
         const currentAssignment = assignmentData[assignmentIndex];
 
-        if (assignmentData.some(assignment => 
-            assignment !== currentAssignment && 
-            assignment.assignment_id === updatedId
-        )) {
-            alert('You already have an assignment with this ID. Please use a different ID.');
-            return;
-        }
-
-        if (updatedUniqueTag) {
-            assignmentData.forEach(assignment => {
-                if (assignment !== currentAssignment) {
-                    // Don't modify unique tags, only regular tags
-                    if (assignment.unique_tag !== updatedUniqueTag) {
-                        assignment.assignment_tags = assignment.assignment_tags.filter(tag => 
-                            tag !== updatedUniqueTag
-                        );
-                    }
-                }
-            });
-        }
-
         const updatedAssignment = {
             ...currentAssignment,
             assignment_name: updatedName,
             assignment_id: updatedId,
             assignment_assigned_by: currentUserId,
-            unique_tag: updatedUniqueTag,
-            assignment_tags: Array.from(document.getElementById('assignment-tags').querySelectorAll('.selected-tag'))
-                .map(button => button.textContent)
-                .filter(tag => tag !== updatedUniqueTag)
+            unique_tag: updatedUniqueTag
         };
 
         assignmentData[assignmentIndex] = updatedAssignment;
