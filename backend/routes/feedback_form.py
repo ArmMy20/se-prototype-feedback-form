@@ -6,26 +6,33 @@ from pydantic import ValidationError
 from backend.data.feedback_submission_data import FeedbackSubmissionData
 from backend.data.json_data_file import JsonRecordFile
 from backend.data.user_accounts import UserRole
-from backend.models.feedback_form_models import FeedbackFormCriteria, FeedbackFormCriteriaEntry, Submission
+from backend.models.feedback_form_models import FeedbackFormCriteria
+from backend.models.feedback_form_models import FeedbackFormCriteriaEntry
+from backend.models.feedback_form_models import Submission
 from backend.routes.authentication import get_current_user
 
 feedback_form_router = APIRouter()
-feedback_criteria_data = JsonRecordFile(file_path="backend/data/feedback-form-criteria.json")
+feedback_criteria_data = JsonRecordFile(
+    file_path="backend/data/feedback-form-criteria.json"
+    )
 feedback_submission_data = FeedbackSubmissionData()
+
 
 def validate_new_feedback_form(new_feedback_form: FeedbackFormCriteria):
     cur_feedback_form = feedback_criteria_data.getRecords()
-    for feedback in cur_feedback_form:   #to ensure new assignment does not already exist in json file
+    for feedback in cur_feedback_form:
         if feedback["assignment_id"] == new_feedback_form.assignment_id:
-            raise Exception(f"Feedback form for {new_feedback_form.assignment_id} already exists.")
-    
+            raise Exception(f"""
+                            Feedback form for:
+                            {new_feedback_form.assignment_id} already exists.
+                            """)
     return True
 
 
 # POST /feedback-form = Save feedback forms created by module organisers
 @feedback_form_router.post("/post-new-feedback-form", tags=["feedback"])
 async def post_feedback_form(new_form: FeedbackFormCriteria, current_user: Annotated[UserRole, Depends(get_current_user)]):
-    try:       
+    try:
         # validate new_form (check whether feedback form for assignment already exists (fail safe))
         validate_new_feedback_form(new_form)
         # persist new_form in file

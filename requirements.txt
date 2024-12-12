@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-multipart
+pydantic
+bcrypt
+pyjwt
+pytest
+flake8
+gunicorn
