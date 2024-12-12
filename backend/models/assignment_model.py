@@ -1,6 +1,7 @@
 from typing import Optional
 from pydantic import BaseModel
 
+
 class Assignment(BaseModel):
     assignment_id: Optional[str] = ""
     assignment_name: str
