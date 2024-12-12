@@ -5,5 +5,4 @@ pydantic
 bcrypt
 pyjwt
 pytest
-flake8
 gunicorn
